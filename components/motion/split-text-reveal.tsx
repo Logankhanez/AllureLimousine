@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect } from "react"
-import { motion, useAnimation, type Variants } from "framer-motion"
+import { motion, useAnimation } from "framer-motion"
 import { useInView } from "react-intersection-observer"
 
 interface SplitTextRevealProps {
@@ -42,38 +42,41 @@ export default function SplitTextReveal({
   const items = type === "words" ? text.split(" ") : Array.from(text)
 
   // Définir les animations en fonction de la direction
-  const getHiddenState = () => {
-    switch (direction) {
-      case "up": return { y: 20, opacity: 0 }
-      case "down": return { y: -20, opacity: 0 }
-      case "left": return { x: 20, opacity: 0 }
-      case "right": return { x: -20, opacity: 0 }
+  const getVariants = () => {
+    const directions = {
+      up: {
+        hidden: { y: 20, opacity: 0 },
+        visible: { y: 0, opacity: 1 },
+      },
+      down: {
+        hidden: { y: -20, opacity: 0 },
+        visible: { y: 0, opacity: 1 },
+      },
+      left: {
+        hidden: { x: 20, opacity: 0 },
+        visible: { x: 0, opacity: 1 },
+      },
+      right: {
+        hidden: { x: -20, opacity: 0 },
+        visible: { x: 0, opacity: 1 },
+      },
     }
+
+    return directions[direction]
   }
 
-  const getVisibleState = () => {
-    switch (direction) {
-      case "up":
-      case "down":
-        return { y: 0, opacity: 1 }
-      case "left":
-      case "right":
-        return { x: 0, opacity: 1 }
-    }
-  }
-
-  const container: Variants = {
+  const container = {
     hidden: { opacity: 0 },
-    visible: {
+    visible: (i = 1) => ({
       opacity: 1,
       transition: { staggerChildren, delayChildren: delay },
-    },
+    }),
   }
 
-  const child: Variants = {
-    hidden: getHiddenState(),
+  const child = {
+    ...getVariants(),
     visible: {
-      ...getVisibleState(),
+      ...getVariants().visible,
       transition: {
         type: "spring",
         damping: 12,
