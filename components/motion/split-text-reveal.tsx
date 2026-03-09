@@ -78,7 +78,7 @@ export default function SplitTextReveal({
     visible: {
       ...getVariants().visible,
       transition: {
-        type: "spring",
+        type: "spring" as const,
         damping: 12,
         stiffness: 100,
         duration,
