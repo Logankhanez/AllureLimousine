@@ -114,6 +114,14 @@ export default function NavBar() {
           </div>
 
           <Link
+            href="/blog"
+            className={`${
+              pathname?.startsWith("/blog") ? "text-[#8e7d3f]" : "text-black"
+            } hover:text-[#8e7d3f] transition-colors text-sm sm:text-base tracking-wider whitespace-nowrap font-['Georgia'] font-medium`}
+          >
+            BLOG
+          </Link>
+          <Link
             href="/contact"
             className={`${
               pathname === "/contact" ? "text-[#8e7d3f]" : "text-black"
@@ -202,6 +210,16 @@ export default function NavBar() {
                 </Link>
               </div>
             </div>
+
+            <Link
+              href="/blog"
+              className={`${
+                pathname?.startsWith("/blog") ? "text-[#8e7d3f]" : "text-white"
+              } hover:text-[#8e7d3f] transition-colors text-xl tracking-wider font-['Georgia'] font-medium`}
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              BLOG
+            </Link>
 
             <Link
               href="/contact"
