@@ -1,6 +1,6 @@
 "use client"
 
-import { motion, useAnimation } from "framer-motion"
+import { motion, useAnimation, type Variants } from "framer-motion"
 import { useEffect } from "react"
 import { useInView } from "react-intersection-observer"
 
@@ -36,15 +36,15 @@ export default function TextReveal({
 
   const letters = Array.from(text)
 
-  const container = {
+  const container: Variants = {
     hidden: { opacity: 0 },
-    visible: (i = 1) => ({
+    visible: {
       opacity: 1,
       transition: { staggerChildren, delayChildren: delay },
-    }),
+    },
   }
 
-  const child = {
+  const child: Variants = {
     hidden: {
       opacity: 0,
       y: 20,

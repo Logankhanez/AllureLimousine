@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect } from "react"
-import { motion, useAnimation } from "framer-motion"
+import { motion, useAnimation, type Variants } from "framer-motion"
 import { useInView } from "react-intersection-observer"
 
 interface SplitTextRevealProps {
@@ -41,50 +41,47 @@ export default function SplitTextReveal({
   // Diviser le texte en mots ou en caractères
   const items = type === "words" ? text.split(" ") : Array.from(text)
 
-  // Définir les animations en fonction de la direction
-  const getVariants = () => {
-    const directions = {
-      up: {
-        hidden: { y: 20, opacity: 0 },
-        visible: { y: 0, opacity: 1 },
-      },
-      down: {
-        hidden: { y: -20, opacity: 0 },
-        visible: { y: 0, opacity: 1 },
-      },
-      left: {
-        hidden: { x: 20, opacity: 0 },
-        visible: { x: 0, opacity: 1 },
-      },
-      right: {
-        hidden: { x: -20, opacity: 0 },
-        visible: { x: 0, opacity: 1 },
-      },
-    }
-
-    return directions[direction]
-  }
-
-  const container = {
+  const container: Variants = {
     hidden: { opacity: 0 },
-    visible: (i = 1) => ({
+    visible: {
       opacity: 1,
       transition: { staggerChildren, delayChildren: delay },
-    }),
-  }
-
-  const child = {
-    ...getVariants(),
-    visible: {
-      ...getVariants().visible,
-      transition: {
-        type: "spring",
-        damping: 12,
-        stiffness: 100,
-        duration,
-      },
     },
   }
+
+  const getChildVariants = (): Variants => {
+    const baseTransition = {
+      type: "spring" as const,
+      damping: 12,
+      stiffness: 100,
+      duration,
+    }
+
+    switch (direction) {
+      case "up":
+        return {
+          hidden: { y: 20, opacity: 0 },
+          visible: { y: 0, opacity: 1, transition: baseTransition },
+        }
+      case "down":
+        return {
+          hidden: { y: -20, opacity: 0 },
+          visible: { y: 0, opacity: 1, transition: baseTransition },
+        }
+      case "left":
+        return {
+          hidden: { x: 20, opacity: 0 },
+          visible: { x: 0, opacity: 1, transition: baseTransition },
+        }
+      case "right":
+        return {
+          hidden: { x: -20, opacity: 0 },
+          visible: { x: 0, opacity: 1, transition: baseTransition },
+        }
+    }
+  }
+
+  const child = getChildVariants()
 
   return (
     <motion.div
@@ -102,4 +99,3 @@ export default function SplitTextReveal({
     </motion.div>
   )
 }
-
